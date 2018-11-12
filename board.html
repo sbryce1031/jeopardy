@@ -7,13 +7,10 @@
 <script>
 	function init()
 	{
-		console.log(questions);
-		document.getElementById("cat1").innerHTML = questions[0].name
-		document.getElementById("cat2").innerHTML = questions[1].name
-		document.getElementById("cat3").innerHTML = questions[2].name
-		document.getElementById("cat4").innerHTML = questions[3].name
-		document.getElementById("cat5").innerHTML = questions[4].name
-		document.getElementById("cat6").innerHTML = questions[5].name
+		for(i=0; i < 6; i++)
+		{
+			document.getElementById("cat" + (i + 1)).innerHTML = questions[i].name
+		}
 	}
 	window.onload = init;
 </script>
@@ -27,12 +24,10 @@ var phase = 1
 
 function doublejep()
 {
-	document.getElementById("cat1").innerHTML = doublequestions[0].name;
-	document.getElementById("cat2").innerHTML = doublequestions[1].name;
-	document.getElementById("cat3").innerHTML = doublequestions[2].name;
-	document.getElementById("cat4").innerHTML = doublequestions[3].name;
-	document.getElementById("cat5").innerHTML = doublequestions[4].name;
-	document.getElementById("cat6").innerHTML = doublequestions[5].name;
+	for(i=0; i < 6; i++)
+	{
+			document.getElementById("cat" + (i + 1)).innerHTML = doublequestions[i].name
+	}
 	var cards = document.getElementsByClassName("grid-item");
 	var i;
 	for(i = 0; i < 30; i++)
