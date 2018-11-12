@@ -56,55 +56,31 @@ function finaljep()
 	q.appendChild(next);
 }
 
+function createResultButton(team, val, correct)
+{
+	var b = document.createElement("input");
+	b.type = "button";
+	if(correct)
+	{
+		b.value = "Right";
+	}
+	else
+	{
+		b.value = "Wrong";
+	}
+	b.onclick = function(){answered(team, val, correct)};
+	b.id = b.value.toLowerCase() + team.toString();
+	document.getElementById("team" + team.toString()).appendChild(b);
+}
+
 function qinner(val)
 {
-	var i = 1;
-	var j = 0;
-	var buttons = {};
-		buttons[j] = document.createElement("input");
-		buttons[j].type = "button";
-		buttons[j].value = "Right";
-		buttons[j].onclick = function(){answered(1, val, true)};
-		buttons[j].id = "right" + i.toString();
-		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
-		j++;
-		buttons[j] = document.createElement("input");
-		buttons[j].type = "button";
-		buttons[j].value = "Wrong";
-		buttons[j].onclick = function(){answered(1, val, false)};
-		buttons[j].id = "wrong" + i.toString();
-		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
-		j++;
-		i++;
-		buttons[j] = document.createElement("input");
-		buttons[j].type = "button";
-		buttons[j].value = "Right";
-		buttons[j].onclick = function(){answered(2, val, true)};
-		buttons[j].id = "right" + i.toString();
-		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
-		j++;
-		buttons[j] = document.createElement("input");
-		buttons[j].type = "button";
-		buttons[j].value = "Wrong";
-		buttons[j].onclick = function(){answered(2, val, false)};
-		buttons[j].id = "wrong" + i.toString();
-		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
-		j++;
-		i++;
-		buttons[j] = document.createElement("input");
-		buttons[j].type = "button";
-		buttons[j].value = "Right";
-		buttons[j].onclick = function(){answered(3, val, true)};
-		buttons[j].id = "right" + i.toString();
-		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
-		j++;
-		buttons[j] = document.createElement("input");
-		buttons[j].type = "button";
-		buttons[j].value = "Wrong";
-		buttons[j].onclick = function(){answered(3, val, false)};
-		buttons[j].id = "wrong" + i.toString();
-		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
-		j++;
+	createResultButton(1, val, true);
+	createResultButton(1, val, false);
+	createResultButton(2, val, true);
+	createResultButton(2, val, false);
+	createResultButton(3, val, true);
+	createResultButton(3, val, false);
 }
 
   function qselected(category, qNdx, card) {
