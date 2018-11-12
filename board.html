@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="questions.js" ></script>
+<script src="doublej.js"></script>
+<script>
+	function init()
+	{
+		console.log(questions);
+		document.getElementById("cat1").innerHTML = questions[0].name
+		document.getElementById("cat2").innerHTML = questions[1].name
+		document.getElementById("cat3").innerHTML = questions[2].name
+		document.getElementById("cat4").innerHTML = questions[3].name
+		document.getElementById("cat5").innerHTML = questions[4].name
+		document.getElementById("cat6").innerHTML = questions[5].name
+	}
+	window.onload = init;
+</script>
+</head>
+<body>
+
+<script>
+var points = [0, 0, 0]
+var qcount = 0
+var phase = 1
+
+function doublejep()
+{
+	document.getElementById("cat1").innerHTML = doublequestions[0].name;
+	document.getElementById("cat2").innerHTML = doublequestions[1].name;
+	document.getElementById("cat3").innerHTML = doublequestions[2].name;
+	document.getElementById("cat4").innerHTML = doublequestions[3].name;
+	document.getElementById("cat5").innerHTML = doublequestions[4].name;
+	document.getElementById("cat6").innerHTML = doublequestions[5].name;
+	var cards = document.getElementsByClassName("grid-item");
+	var i;
+	for(i = 0; i < 30; i++)
+	{
+		cards[i].innerHTML = "$" + (parseInt(cards[i].innerHTML.substring(1)) * 2).toString();
+		cards[i].style.color = "#f9ab61"
+	}
+}
+
+function finaljep()
+{
+	var board = document.getElementById("board");
+	board.style.display = "none";
+	var q = document.getElementById("q");
+	q.style.display = "block";
+	q.innerHTML = "<p>Final Jeopardy</p><p>Decimal to Binary</p><p></p>";
+	var next = document.createElement("input");
+	next.type = "button";
+	next.value = "Reveal Question";
+	next.onclick = function(){q.innerHTML = "<p>Convert this decimal number to binary:</p><p>74</p>";};
+	q.appendChild(next);
+}
+
+function qinner(val)
+{
+	var i = 1;
+	var j = 0;
+	var buttons = {};
+		buttons[j] = document.createElement("input");
+		buttons[j].type = "button";
+		buttons[j].value = "Right";
+		buttons[j].onclick = function(){answered(1, val, true)};
+		buttons[j].id = "right" + i.toString();
+		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
+		j++;
+		buttons[j] = document.createElement("input");
+		buttons[j].type = "button";
+		buttons[j].value = "Wrong";
+		buttons[j].onclick = function(){answered(1, val, false)};
+		buttons[j].id = "wrong" + i.toString();
+		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
+		j++;
+		i++;
+		buttons[j] = document.createElement("input");
+		buttons[j].type = "button";
+		buttons[j].value = "Right";
+		buttons[j].onclick = function(){answered(2, val, true)};
+		buttons[j].id = "right" + i.toString();
+		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
+		j++;
+		buttons[j] = document.createElement("input");
+		buttons[j].type = "button";
+		buttons[j].value = "Wrong";
+		buttons[j].onclick = function(){answered(2, val, false)};
+		buttons[j].id = "wrong" + i.toString();
+		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
+		j++;
+		i++;
+		buttons[j] = document.createElement("input");
+		buttons[j].type = "button";
+		buttons[j].value = "Right";
+		buttons[j].onclick = function(){answered(3, val, true)};
+		buttons[j].id = "right" + i.toString();
+		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
+		j++;
+		buttons[j] = document.createElement("input");
+		buttons[j].type = "button";
+		buttons[j].value = "Wrong";
+		buttons[j].onclick = function(){answered(3, val, false)};
+		buttons[j].id = "wrong" + i.toString();
+		document.getElementById("team" + i.toString()).appendChild(buttons[j]);
+		j++;
+}
+
+  function qselected(category, qNdx, card) {
+	qcount++;
+  	card.style.color = "#0f27a3";
+    var board = document.getElementById("board");
+	board.style.display = "none";
+	var q = document.getElementById("q");
+	q.style.display = "block";
+	var qobj = questions;
+	if(phase == 2)
+	{
+		qobj = doublequestions;
+	}
+	if(qobj[category].questions[qNdx].dailyd)
+	{
+		q.innerHTML = "Daily Double <p></p>";
+		var box = document.createElement("input");
+		box.type = "text";
+		q.appendChild(box);
+		var ok = document.createElement("input");
+		ok.type = "button";
+		ok.value = "Wager";
+		ok.onclick = function()
+		{
+			q.innerHTML = qobj[category].questions[qNdx].q;
+			qinner(parseInt(box.value));
+		};
+		q.appendChild(ok);
+	}
+	else
+	{
+		q.innerHTML = qobj[category].questions[qNdx] + "<p><\p>";
+		var skip = document.createElement("input");
+		skip.type = "button";
+		skip.value = "Skip";
+		skip.onclick = function(){answered(3, 0, true)};
+		q.appendChild(skip);
+		var mult = 200;
+		if(phase == 2)
+		{
+			mult = 400;
+		}
+		qinner((qNdx + 1) * mult);
+	}
+	console.log(qcount)
+	if(qcount >= 30)
+	{
+		phase++;
+		qcount = 0;
+		if(phase == 2)
+		{
+			doublejep();
+		}
+	}
+  }
+
+  function answered(teamNum, value, correct) {
+    var board = document.getElementById("board");
+	board.style.display = "grid";
+	var q = document.getElementById("q");
+	q.style.display = "none";
+	if(correct)
+	{
+		points[teamNum - 1] += value;
+	}
+	else
+	{
+		points[teamNum - 1] -= value;
+	}
+
+	document.getElementById("score" + teamNum.toString()).innerHTML = "$" + points[teamNum-1].toString();
+	var i;
+	for(i = 1; i < 4; i++)
+	{
+		var element = document.getElementById("right" + i.toString());
+		element.parentNode.removeChild(element);
+		element = document.getElementById("wrong" + i.toString());
+		element.parentNode.removeChild(element);
+	}
+	if(phase == 3)
+	{
+		finaljep();
+	}
+  }
+</script>
+
+<div class="grid-container" id="board">
+  <div class="category" id="cat1"></div>
+  <div class="category" id="cat2"></div>
+  <div class="category" id="cat3"></div>
+  <div class="category" id="cat4"></div>
+  <div class="category" id="cat5"></div>
+  <div class="category" id="cat6"></div>
+
+  <button class="grid-item" onclick="qselected(0, 0, this)">$200</button>
+  <button class="grid-item" onclick="qselected(1, 0, this)">$200</button>
+  <button class="grid-item" onclick="qselected(2, 0, this)">$200</button>
+  <button class="grid-item" onclick="qselected(3, 0, this)">$200</button>
+  <button class="grid-item" onclick="qselected(4, 0, this)">$200</button>
+  <button class="grid-item" onclick="qselected(5, 0, this)">$200</button>
+
+
+  <button class="grid-item" onclick="qselected(0, 1, this)">$400</button>
+  <button class="grid-item" onclick="qselected(1, 1, this)">$400</button>
+  <button class="grid-item" onclick="qselected(2, 1, this)">$400</button>
+  <button class="grid-item" onclick="qselected(3, 1, this)">$400</button>
+  <button class="grid-item" onclick="qselected(4, 1, this)">$400</button>
+  <button class="grid-item" onclick="qselected(5, 1, this)">$400</button>
+
+  
+  <button class="grid-item" onclick="qselected(0, 2, this)">$600</button>
+  <button class="grid-item" onclick="qselected(1, 2, this)">$600</button>
+  <button class="grid-item" onclick="qselected(2, 2, this)">$600</button>
+  <button class="grid-item" onclick="qselected(3, 2, this)">$600</button>
+  <button class="grid-item" onclick="qselected(4, 2, this)">$600</button>
+  <button class="grid-item" onclick="qselected(5, 2, this)">$600</button>
+
+  
+  <button class="grid-item" onclick="qselected(0, 3, this)">$800</button>
+  <button class="grid-item" onclick="qselected(1, 3, this)">$800</button>
+  <button class="grid-item" onclick="qselected(2, 3, this)">$800</button>
+  <button class="grid-item" onclick="qselected(3, 3, this)">$800</button>
+  <button class="grid-item" onclick="qselected(4, 3, this)">$800</button>
+  <button class="grid-item" onclick="qselected(5, 3, this)">$800</button>
+
+  
+  <button class="grid-item" onclick="qselected(0, 4, this)">$1000</button>
+  <button class="grid-item" onclick="qselected(1, 4, this)">$1000</button>
+  <button class="grid-item" onclick="qselected(2, 4, this)">$1000</button>
+  <button class="grid-item" onclick="qselected(3, 4, this)">$1000</button>
+  <button class="grid-item" onclick="qselected(4, 4, this)">$1000</button>
+  <button class="grid-item" onclick="qselected(5, 4, this)">$1000</button>
+</div>
+
+<div class = "question" id = "q">
+	This is a question.
+</div>
+
+<div class = "footer">
+	<div class="team" id="team1">
+		<h2>Team 1</h2>
+		<h1 id = "score1">$0</h1>
+	</div>
+	<div class="team" id="team2">
+		<h2>Team 2</h2>
+		<h1 id = "score2">$0</h1>
+	</div>
+	<div class="team" id="team3">
+		<h2>Team 3</h2>
+		<h1 id = "score3">$0</h1>
+	</div>
+</div>
+
+</body>
+</html>
